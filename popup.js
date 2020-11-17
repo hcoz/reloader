@@ -1,15 +1,10 @@
 function reloader(type, interval) {
     const isIntervalValid = Number.isInteger(interval) && interval >= 5 && interval <= 500;
     if (type === 'add' && !isIntervalValid) {
-        // window.alert('Please enter a valid interval value!');
-        chrome.notifications.create('alert', {
-            icon: 'icon.png',
-            type: 'basic',
-            title: 'Invalid Input!',
-            message: 'Please enter a valid interval value.'
-        });
+        document.getElementById('message').innerText = 'Please enter a valid interval value!';
         return;
     }
+    document.getElementById('message').innerText = '';
 
     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
         if (tabs[0]) {
