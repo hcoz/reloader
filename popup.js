@@ -41,13 +41,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    chrome.alarms.getAll(function (alarmList) {
-        const taskList = document.getElementById('tasklist');
-
-        alarmList.forEach(alarm => {
-            const item = document.createElement('li');
-            item.innerHTML = `<span>${alarm.name}</span><button name="${alarm.name}">Stop</button>`;
-            taskList.appendChild(item);
+    chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+        const currentTabID = `${tabs[0].id}`;
+        // list reload tasks
+        chrome.alarms.getAll(function (alarmList) {
+            const taskList = document.getElementById('tasklist');
+    
+            alarmList.forEach(alarm => {
+                const item = document.createElement('li');
+                const tabID = alarm.name.split('_')[1];
+                item.innerHTML = `<span>${alarm.name}${tabID === currentTabID ? ' (Current Tab)' : ''}</span><button name="${alarm.name}">Stop</button>`;
+                taskList.appendChild(item);
+            });
         });
     });
 });

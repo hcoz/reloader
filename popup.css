@@ -29,9 +29,10 @@
 #tasklist > li {
     display: flex;
     justify-content: space-between;
-    background-color: aqua;
+    background-color: #CFD8DC;
     padding: 5px;
     margin: 5px;
+    font-size: 1.2em;
 }
 
 #message {
