@@ -1,7 +1,39 @@
 .container {
     min-width: 250px;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
 }
 
-.container input {
-    min-width: 110px;
+.newtask {
+    display: flex;
+    flex-direction: row;
+    padding-left: 5px;
+}
+
+.newtask > input {
+    min-width: 150px;
+    min-height: 20px;
+}
+
+.newtask > button {
+    min-width: 70px;
+    min-height: 20px;
+}
+
+#tasklist {
+    list-style-type: none;
+    padding: 0;
+}
+
+#tasklist > li {
+    display: flex;
+    justify-content: space-between;
+    background-color: aqua;
+    padding: 5px;
+    margin: 5px;
+}
+
+#message {
+    display: none;
 }

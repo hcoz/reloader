@@ -1,17 +1,22 @@
-function reloader(type, interval) {
-    const isIntervalValid = Number.isInteger(interval) && interval >= 5 && interval <= 500;
+function reloader(type, interval, alarmName) {
+    const message = document.getElementById('message');
+    const isIntervalValid = Number.isInteger(interval) && interval >= 1 && interval <= 60;
+
     if (type === 'add' && !isIntervalValid) {
-        document.getElementById('message').innerText = 'Please enter a valid interval value!';
+       message.innerHTML = 'Please enter a valid interval value!';
+       message.style.display = 'block';
         return;
     }
-    document.getElementById('message').innerText = '';
+    message.style.display = 'none';
+    message.innerHTML = '';
 
     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
         if (tabs[0]) {
             const params = {
                 tabID: tabs[0].id,
                 type,
-                interval
+                interval,
+                alarmName
             };
 
             chrome.runtime.sendMessage(params, function (response) {
@@ -26,10 +31,23 @@ function reloader(type, interval) {
 
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('start').addEventListener('click', function () {
-        const interval = parseInt(document.getElementById('interval').value, 10);
+        const interval = parseFloat(document.getElementById('interval').value);
         reloader('add', interval);
     });
-    document.getElementById('stop').addEventListener('click', function () {
-        reloader('remove');
+
+    document.getElementById('tasklist').addEventListener('click', function (e) {
+        if (e.target && e.target.name) {
+            reloader('remove', null, e.target.name);
+        }
+    });
+
+    chrome.alarms.getAll(function (alarmList) {
+        const taskList = document.getElementById('tasklist');
+
+        alarmList.forEach(alarm => {
+            const item = document.createElement('li');
+            item.innerHTML = `<span>${alarm.name}</span><button name="${alarm.name}">Stop</button>`;
+            taskList.appendChild(item);
+        });
     });
 });

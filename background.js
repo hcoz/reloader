@@ -1,27 +1,20 @@
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    const { type, tabID, interval } = request;
+    const { type, tabID, interval, alarmName } = request;
 
-    chrome.storage.local.get(['reloadJobID'], function (result) {
-        let { reloadJobID } = result;
+    if (type === 'remove') {
+        chrome.alarms.clear(alarmName);
+        return sendResponse({ result: 'ok' });
+    }
 
-        if (reloadJobID) {
-            clearInterval(reloadJobID);
+    chrome.alarms.create(`reloader_${tabID}`, { periodInMinutes: interval });
+    chrome.alarms.onAlarm.addListener(function (alarm) {
+        if (alarm.name === `reloader_${tabID}`) {
+            chrome.tabs.reload(tabID);
         }
-        if (type === 'remove') {
-            return sendResponse({ result: 'ok' });
-        }
-
-        try {
-            reloadJobID = setInterval(() => {
-                chrome.tabs.reload(tabID);
-            }, interval * 1000);
-        } catch (err) {
-            console.error(err);
-            clearInterval(reloadJobID);
-            return sendResponse({ result: 'fail' });
-        }
-
-        chrome.storage.local.set({ reloadJobID });
-        sendResponse({ result: 'ok' });
     });
+    sendResponse({ result: 'ok' });
+});
+
+chrome.tabs.onRemoved.addListener(function (tabID) {
+    chrome.alarms.clear(`reloader_${tabID}`);
 });
