@@ -1,10 +1,9 @@
 function reloader(type, interval, alarmName) {
     const message = document.getElementById('message');
-    const isIntervalValid = Number.isInteger(interval) && interval >= 1 && interval <= 60;
 
-    if (type === 'add' && !isIntervalValid) {
-       message.innerHTML = 'Please enter a valid interval value!';
-       message.style.display = 'block';
+    if (type === 'add' && (Number.isNaN(interval) || interval < 1 || interval > 60)) {
+        message.innerHTML = 'Please enter a valid interval value!';
+        message.style.display = 'block';
         return;
     }
     message.style.display = 'none';
