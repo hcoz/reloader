@@ -12,9 +12,9 @@ The extension will start the refresh page regularly. You don't need to stay in t
 
 ## To stop the reload:
 1. Open the extension.
-2. Click the stop button.
+2. Click the stop button of the corresponding task in the list.
 
-### !Currently in development mode. If you want to use it, please follow the steps:
+### Currently in development mode. If you want to use it, please follow the steps:
 1. Navigate to `chrome://extensions`
 2. Toggle on "Developer mode" on the top right
 3. Click "Load unpacked" on the top left
